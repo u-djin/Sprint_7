@@ -1,10 +1,11 @@
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
+import static org.apache.http.HttpStatus.*;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Test;
-import API.Orders;
+import api.Orders;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -24,7 +25,7 @@ public class OrderCreateTest {
                 {new String[] {"GREY"}},
                 {new String[] {"BLACK"}},
                 {new String[] {"BLACK", "GREY"}},
-                {null},
+                {null}
         };
     }
 
@@ -33,7 +34,7 @@ public class OrderCreateTest {
     @Description("Expected 201 code")
     public void createOrderTest() {
         Response response = order.createOrder(colors);
-        response.then().statusCode(201);
+        response.then().statusCode(SC_CREATED);
         response.then().assertThat().body("track", Matchers.notNullValue());
         this.track = response.then().extract().path("track");
     }
@@ -41,6 +42,6 @@ public class OrderCreateTest {
     @After
     public void cancelOrder() {
         Response response = order.cancelOrder(this.track);
-        response.then().statusCode(200);
+        response.then().statusCode(SC_OK);
     }
 }
